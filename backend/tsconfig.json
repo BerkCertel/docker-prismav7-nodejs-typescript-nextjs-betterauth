@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // Hangi JavaScript sürümüne derleneceği
+    "module": "commonjs", // Node.js'in kullandığı modül sistemi
+    "rootDir": "./src", // TypeScript kaynak dosyalarının bulunduğu klasör
+    "outDir": "./dist", // Derlenmiş JavaScript dosyalarının kaydedileceği klasör
+    "esModuleInterop": true, // 'import express from "express"' gibi modern import syntax'ını sağlar
+    "forceConsistentCasingInFileNames": true,
+    "strict": true, // Tüm katı tip kontrol kurallarını etkinleştirir (önerilir)
+    "skipLibCheck": true // Bağımlılıkların tip kontrolünü atlar, derlemeyi hızlandırır
+  },
+  "include": ["src/**/*"], // Derlemeye dahil edilecek dosyalar
+  "exclude": ["node_modules"] // Derlemeden hariç tutulacak dosyalar
+}

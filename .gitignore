@@ -1,0 +1,19 @@
+# Hassas Bilgiler
+.env
+not.txt
+
+# Bağımlılık Klasörleri
+node_modules
+/frontend/node_modules
+/backend/node_modules
+/backend/src/generated/prisma
+
+# Next.js Build Çıktısı
+/frontend/.next
+
+# Loglar
+*.log
+
+# İşletim Sistemi ve Editör Dosyaları
+.DS_Store
+.vscode/

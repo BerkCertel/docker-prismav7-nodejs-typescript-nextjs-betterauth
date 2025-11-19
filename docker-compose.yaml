@@ -1,0 +1,39 @@
+services:
+  # 1. PostgreSQL Veritabanı Servisi
+  postgres_db:
+    image: postgres:latest
+    container_name: postgres_database
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      # DİKKAT: HATA BURADA DÜZELTİLDİ. Sondaki "/data" kaldırıldı.
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # 2. Adminer Web Arayüzü
+  adminer:
+    image: adminer
+    container_name: adminer_ui
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres_db
+
+volumes:
+  postgres-data:
+    driver: local
