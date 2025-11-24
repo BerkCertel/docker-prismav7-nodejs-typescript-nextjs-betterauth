@@ -12,7 +12,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 dotenv.config();
 
 // Ortam değişkenlerini alıyoruz
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 const POSTGRES_USER = process.env.POSTGRES_USER;
 const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD;
 const POSTGRES_DB = process.env.POSTGRES_DB;
