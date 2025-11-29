@@ -1,65 +1,27 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { prisma } from "../prisma";
+import { MulterRequest } from "../types";
+import { StorageService } from "../services/storage.service";
 
-// CREATE CATEGORY
-export const createCategory = async (req: Request, res: Response) => {
+// ============ CREATE CATEGORY WITH IMAGE (ZORUNLU) ============
+export const createCategory = async (req: MulterRequest, res: Response) => {
   try {
-    const { id } = req.params;
     const { name } = req.body;
 
+    // ========== RESİM ZORUNLU KONTROLÜ ==========
+    if (!req.file) {
+      return res.status(422).json({
+        success: false,
+        error: "Kategori resmi zorunludur",
+      });
+    }
+
+    // İsim formatla
     const editedName =
       name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-
     const trimmedName = editedName.replace(/\s+/g, " ").trim();
 
-    if (!trimmedName) {
-      return res.status(422).json({ error: "Name is required" });
-    }
-
-    if (await prisma.category.findUnique({ where: { name: trimmedName } })) {
-      return res
-        .status(409)
-        .json({ error: `${trimmedName} category already exists` });
-    }
-
-    const newCategory = await prisma.category.create({
-      data: {
-        name: trimmedName,
-      },
-    });
-
-    return res.status(201).json(newCategory);
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error", error });
-  }
-};
-
-// UPDATE CATEGORY BY ID
-
-export const updateCategoryById = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { name } = req.body;
-
-    const editedName =
-      name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-
-    const trimmedName = editedName.replace(/\s+/g, " ").trim();
-
-    if (!id) {
-      return res.status(422).json({ error: "Category ID is required" });
-    }
-
-    if (isNaN(Number(id))) {
-      return res.status(422).json({ error: "Category ID must be a number" });
-    }
-
-    if (Number(id) <= 0) {
-      return res
-        .status(422)
-        .json({ error: "Category ID must be greater than zero" });
-    }
-
+    // Validasyon
     if (!trimmedName) {
       return res.status(422).json({ error: "Name is required" });
     }
@@ -76,19 +38,86 @@ export const updateCategoryById = async (req: Request, res: Response) => {
         .json({ error: "Name must be at most 50 characters long" });
     }
 
-    if (
-      trimmedName.trim() === "" ||
-      !trimmedName ||
-      trimmedName === null ||
-      trimmedName === undefined ||
-      typeof trimmedName !== "string" ||
-      /^\s*$/.test(trimmedName)
-    ) {
+    // Kategori var mı kontrol et
+    const existingCategory = await prisma.category.findUnique({
+      where: { name: trimmedName },
+    });
+
+    if (existingCategory) {
       return res
-        .status(422)
-        .json({ error: "Name cannot be empty or whitespace" });
+        .status(409)
+        .json({ error: `${trimmedName} category already exists` });
     }
 
+    // ========== RESİM YÜKLEME ==========
+    let imageUrl: string;
+
+    try {
+      console.log("📤 Resim yükleniyor:", req.file.originalname);
+
+      const uploadResult = await StorageService.uploadFile(
+        req.file.buffer,
+        req.file.originalname,
+        "CATEGORIES",
+        req.file.mimetype
+      );
+
+      imageUrl = uploadResult.url;
+      console.log("✅ Resim başarıyla yüklendi:", imageUrl);
+    } catch (uploadError: any) {
+      console.error("❌ Resim yüklenemedi:", uploadError);
+
+      return res.status(500).json({
+        success: false,
+        error: "Resim yüklenirken hata oluştu",
+        details: uploadError.message,
+      });
+    }
+
+    // Kategori oluştur
+    const newCategory = await prisma.category.create({
+      data: {
+        name: trimmedName,
+        imageUrl: imageUrl,
+      },
+    });
+
+    return res.status(201).json({
+      success: true,
+      data: newCategory,
+      message: "Kategori başarıyla oluşturuldu",
+    });
+  } catch (error: any) {
+    console.error("❌ Create category error:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error",
+    });
+  }
+};
+
+// ============ UPDATE CATEGORY BY ID ============
+export const updateCategoryById = async (req: MulterRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    // ID validasyonu
+    if (!id) {
+      return res.status(422).json({ error: "Category ID is required" });
+    }
+
+    if (isNaN(Number(id))) {
+      return res.status(422).json({ error: "Category ID must be a number" });
+    }
+
+    if (Number(id) <= 0) {
+      return res
+        .status(422)
+        .json({ error: "Category ID must be greater than zero" });
+    }
+
+    // Kategori var mı kontrol et
     const category = await prisma.category.findUnique({
       where: { id: parseInt(id) },
     });
@@ -97,63 +126,116 @@ export const updateCategoryById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Category not found" });
     }
 
+    // İsim güncelleme
+    let trimmedName = category.name; // Default olarak mevcut isim
+
+    if (name) {
+      const editedName =
+        name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+      trimmedName = editedName.replace(/\s+/g, " ").trim();
+
+      if (trimmedName.length < 3) {
+        return res
+          .status(422)
+          .json({ error: "Name must be at least 3 characters long" });
+      }
+
+      if (trimmedName.length > 50) {
+        return res
+          .status(422)
+          .json({ error: "Name must be at most 50 characters long" });
+      }
+
+      // Aynı isimde başka kategori var mı?
+      const existingCategory = await prisma.category.findFirst({
+        where: {
+          name: trimmedName,
+          id: { not: parseInt(id) }, // Kendisi hariç
+        },
+      });
+
+      if (existingCategory) {
+        return res
+          .status(409)
+          .json({ error: `${trimmedName} category already exists` });
+      }
+    }
+
+    // ========== RESİM GÜNCELLEME (OPSIYONEL) ==========
+    let imageUrl = category.imageUrl; // Mevcut resim
+
+    if (req.file) {
+      try {
+        console.log("📤 Yeni resim yükleniyor:", req.file.originalname);
+
+        // Eski resmi sil, yeni resmi yükle
+        const uploadResult = await StorageService.replaceFile(
+          category.imageUrl,
+          req.file.buffer,
+          req.file.originalname,
+          "CATEGORIES",
+          req.file.mimetype
+        );
+
+        imageUrl = uploadResult.url;
+        console.log("✅ Resim güncellendi:", imageUrl);
+      } catch (uploadError: any) {
+        console.error("❌ Resim güncellenemedi:", uploadError);
+
+        return res.status(500).json({
+          success: false,
+          error: "Resim güncellenirken hata oluştu",
+          details: uploadError.message,
+        });
+      }
+    }
+
+    // Kategoriyi güncelle
     const updatedCategory = await prisma.category.update({
       where: { id: parseInt(id) },
-      data: { name: trimmedName },
+      data: {
+        name: trimmedName,
+        imageUrl: imageUrl,
+      },
     });
 
-    return res.status(200).json(updatedCategory);
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error", error });
+    return res.status(200).json({
+      success: true,
+      data: updatedCategory,
+      message: "Kategori başarıyla güncellendi",
+    });
+  } catch (error: any) {
+    console.error("❌ Update category error:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error",
+    });
   }
 };
 
-// GET ALL CATEGORIES
-
-export const getAllCategories = async (req: Request, res: Response) => {
+// ============ GET ALL CATEGORIES ============
+export const getAllCategories = async (req: MulterRequest, res: Response) => {
   try {
-    const categories = await prisma.category.findMany();
-    return res.status(200).json(categories);
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error", error });
-  }
-};
-
-// GET CATEGORY BY ID
-export const getCategoryById = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-
-    if (!id) {
-      return res.status(422).json({ error: "Category ID is required" });
-    }
-
-    if (isNaN(Number(id))) {
-      return res.status(422).json({ error: "Category ID must be a number" });
-    }
-
-    if (Number(id) <= 0) {
-      return res
-        .status(422)
-        .json({ error: "Category ID must be greater than zero" });
-    }
-
-    const category = await prisma.category.findUnique({
-      where: { id: Number(id) },
+    const categories = await prisma.category.findMany({
+      orderBy: { createdAt: "desc" },
     });
 
-    if (!category) {
-      return res.status(404).json({ error: "Category not found" });
-    }
-
-    return res.status(200).json(category);
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error", error });
+    return res.status(200).json({
+      success: true,
+      data: categories,
+      count: categories.length,
+    });
+  } catch (error: any) {
+    console.error("❌ Get all categories error:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error",
+    });
   }
 };
 
-// DELETE CATEGORY BY ID
-export const deleteCategoryById = async (req: Request, res: Response) => {
+// ============ GET CATEGORY BY ID ============
+export const getCategoryById = async (req: MulterRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -179,12 +261,74 @@ export const deleteCategoryById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Category not found" });
     }
 
+    return res.status(200).json({
+      success: true,
+      data: category,
+    });
+  } catch (error: any) {
+    console.error("❌ Get category by id error:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error",
+    });
+  }
+};
+
+// ============ DELETE CATEGORY BY ID ============
+export const deleteCategoryById = async (req: MulterRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(422).json({ error: "Category ID is required" });
+    }
+
+    if (isNaN(Number(id))) {
+      return res.status(422).json({ error: "Category ID must be a number" });
+    }
+
+    if (Number(id) <= 0) {
+      return res
+        .status(422)
+        .json({ error: "Category ID must be greater than zero" });
+    }
+
+    const category = await prisma.category.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    // ========== RESMİ MinIO'DAN SİL ==========
+    if (category.imageUrl) {
+      const fileName = StorageService.extractFileNameFromUrl(category.imageUrl);
+      if (fileName) {
+        try {
+          await StorageService.deleteFile(fileName, "CATEGORIES");
+          console.log("✅ Kategori resmi silindi:", fileName);
+        } catch (error) {
+          console.warn("⚠️ Resim silinemedi:", error);
+          // Resim silinemese bile kategoriyi sil
+        }
+      }
+    }
+
+    // Kategoriyi sil
     await prisma.category.delete({
       where: { id: Number(id) },
     });
 
-    return res.status(200).json({ message: "Category deleted successfully" });
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error", error });
+    return res.status(200).json({
+      success: true,
+      message: "Kategori başarıyla silindi",
+    });
+  } catch (error: any) {
+    console.error("❌ Delete category error:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error",
+    });
   }
 };
