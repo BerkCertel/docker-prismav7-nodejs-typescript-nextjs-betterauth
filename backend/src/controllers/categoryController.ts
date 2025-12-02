@@ -126,39 +126,48 @@ export const updateCategoryById = async (req: MulterRequest, res: Response) => {
       return res.status(404).json({ error: "Category not found" });
     }
 
-    // İsim güncelleme
-    let trimmedName = category.name; // Default olarak mevcut isim
+    // İsim güncelleme - varsayılan olarak mevcut isim kullanılır
+    let finalName = category.name;
 
-    if (name) {
-      const editedName =
-        name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-      trimmedName = editedName.replace(/\s+/g, " ").trim();
+    if (typeof name === "string" && name.trim() !== "") {
+      // Önce fazladan boşlukları tek boşluğa indir ve baş/son boşlukları temizle
+      const cleaned = name.replace(/\s+/g, " ").trim();
 
-      if (trimmedName.length < 3) {
+      // Normalize et: ilk harf büyük, diğerleri küçük
+      const processedName =
+        cleaned.charAt(0).toUpperCase() + cleaned.slice(1).toLowerCase();
+
+      // Uzunluk kontrolleri
+      if (processedName.length < 3) {
         return res
           .status(422)
           .json({ error: "Name must be at least 3 characters long" });
       }
 
-      if (trimmedName.length > 50) {
+      if (processedName.length > 50) {
         return res
           .status(422)
           .json({ error: "Name must be at most 50 characters long" });
       }
 
-      // Aynı isimde başka kategori var mı?
-      const existingCategory = await prisma.category.findFirst({
-        where: {
-          name: trimmedName,
-          id: { not: Number(id) }, // Kendisi hariç
-        },
-      });
+      // Eğer isim gerçekten değişiyorsa (aynı isimse uniq kontrolü atla)
+      if (processedName !== category.name) {
+        // Aynı isimde başka kategori var mı?
+        const existingCategory = await prisma.category.findFirst({
+          where: {
+            name: processedName,
+            id: { not: Number(id) }, // Kendisi hariç
+          },
+        });
 
-      if (existingCategory) {
-        return res
-          .status(409)
-          .json({ error: `${trimmedName} category already exists` });
+        if (existingCategory) {
+          return res
+            .status(409)
+            .json({ error: `${processedName} category already exists` });
+        }
       }
+
+      finalName = processedName;
     }
 
     // ========== RESİM GÜNCELLEME (OPSIYONEL) ==========
@@ -194,7 +203,7 @@ export const updateCategoryById = async (req: MulterRequest, res: Response) => {
     const updatedCategory = await prisma.category.update({
       where: { id: Number(id) },
       data: {
-        name: trimmedName,
+        name: finalName,
         imageUrl: imageUrl,
       },
     });
@@ -234,6 +243,31 @@ export const getAllCategories = async (req: MulterRequest, res: Response) => {
   }
 };
 
+// ============ GET ALL CATEGORIES WITH PRODUCTS ============
+export const getAllCategoriesWithProducts = async (
+  req: MulterRequest,
+  res: Response
+) => {
+  try {
+    const categories = await prisma.category.findMany({
+      orderBy: [{ createdAt: "desc" }, { name: "asc" }],
+      include: { products: true },
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: categories,
+      count: categories.length,
+    });
+  } catch (error: any) {
+    console.error("❌ Get all categories error:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error",
+    });
+  }
+};
+
 // ============ GET CATEGORY BY ID ============
 export const getCategoryById = async (req: MulterRequest, res: Response) => {
   try {
@@ -255,6 +289,7 @@ export const getCategoryById = async (req: MulterRequest, res: Response) => {
 
     const category = await prisma.category.findUnique({
       where: { id: Number(id) },
+      include: { products: true },
     });
 
     if (!category) {

@@ -127,3 +127,23 @@ export const createProduct = async (req: MulterRequest, res: Response) => {
     });
   }
 };
+
+export const getProducts = async (req: MulterRequest, res: Response) => {
+  try {
+    const products = await prisma.product.findMany({
+      omit: { categoryId: true }, // categoryId alanını hariç tut
+      include: { category: { select: { id: true, name: true } } }, // sadece seçilen  kategori bilgilerini dahil et
+      // include: { category: true }, // tüm kategori bilgilerini de dahil et
+    });
+    return res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    console.error("❌ Ürünleri getirme hatası:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Ürünleri getirme sırasında bir hata oluştu",
+    });
+  }
+};

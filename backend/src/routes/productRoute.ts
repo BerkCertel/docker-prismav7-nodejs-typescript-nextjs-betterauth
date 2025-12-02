@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProduct } from "../controllers/productController";
+import { createProduct, getProducts } from "../controllers/productController";
 import { upload } from "../middlewares/imageUpload.middleware";
 import { validateFile } from "../middlewares/fileValidation.middleware";
 
@@ -20,8 +20,8 @@ productRouter.post(
 //   updateCategoryById
 // );
 
-// // GET ALL - Tüm kategorileri listele
-// categoryRouter.get("/all-categories", getAllCategories);
+// GET ALL - Tüm ürünleri listele
+productRouter.get("/all-products", getProducts);
 
 // // GET BY ID - Tek kategori getir
 // categoryRouter.get("/get-simple-category/:id", getCategoryById);

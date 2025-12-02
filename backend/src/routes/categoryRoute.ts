@@ -5,6 +5,7 @@ import {
   deleteCategoryById,
   getCategoryById,
   updateCategoryById,
+  getAllCategoriesWithProducts,
 } from "../controllers/categoryController";
 import { upload } from "../middlewares/imageUpload.middleware";
 import { validateFile } from "../middlewares/fileValidation.middleware";
@@ -28,6 +29,12 @@ categoryRouter.put(
 
 // GET ALL - Tüm kategorileri listele
 categoryRouter.get("/all-categories", getAllCategories);
+
+// GET ALL WITH PRODUCTS - Tüm kategorileri ürünleriyle birlikte listele
+categoryRouter.get(
+  "/all-categories-with-products",
+  getAllCategoriesWithProducts
+);
 
 // GET BY ID - Tek kategori getir
 categoryRouter.get("/get-simple-category/:id", getCategoryById);

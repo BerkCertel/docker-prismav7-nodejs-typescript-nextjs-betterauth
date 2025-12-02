@@ -106,10 +106,19 @@ export class StorageService {
   /**
    * URL'den dosya adını çıkar
    */
-  static extractFileNameFromUrl(url: string): string | null {
+  static extractFileNameFromUrl(url?: string | null): string | null {
+    if (!url) return null;
     try {
-      const urlParts = url.split("/");
-      return urlParts[urlParts.length - 1];
+      // 1) Query string veya hash (#) varsa temizle
+      const withoutQuery = url.split("?")[0].split("#")[0];
+
+      // 2) Son segmenti al (trailing slash durumunu filtrele)
+      const segments = withoutQuery.split("/").filter(Boolean);
+      if (segments.length === 0) return null;
+      const last = segments[segments.length - 1];
+
+      // 3) Decode (URL encoded isimler için)
+      return decodeURIComponent(last);
     } catch {
       return null;
     }
