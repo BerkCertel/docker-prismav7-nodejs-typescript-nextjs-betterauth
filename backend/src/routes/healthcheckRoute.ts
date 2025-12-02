@@ -3,6 +3,6 @@ import { healthcheck } from "../controllers/healthcheckController";
 
 const healthcheckRouter = Router();
 
-healthcheckRouter.get("/", healthcheck);
+healthcheckRouter.get("/ping", healthcheck);
 
 export default healthcheckRouter;

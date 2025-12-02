@@ -119,7 +119,7 @@ export const updateCategoryById = async (req: MulterRequest, res: Response) => {
 
     // Kategori var mı kontrol et
     const category = await prisma.category.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: Number(id) },
     });
 
     if (!category) {
@@ -150,7 +150,7 @@ export const updateCategoryById = async (req: MulterRequest, res: Response) => {
       const existingCategory = await prisma.category.findFirst({
         where: {
           name: trimmedName,
-          id: { not: parseInt(id) }, // Kendisi hariç
+          id: { not: Number(id) }, // Kendisi hariç
         },
       });
 
@@ -192,7 +192,7 @@ export const updateCategoryById = async (req: MulterRequest, res: Response) => {
 
     // Kategoriyi güncelle
     const updatedCategory = await prisma.category.update({
-      where: { id: parseInt(id) },
+      where: { id: Number(id) },
       data: {
         name: trimmedName,
         imageUrl: imageUrl,
@@ -217,7 +217,7 @@ export const updateCategoryById = async (req: MulterRequest, res: Response) => {
 export const getAllCategories = async (req: MulterRequest, res: Response) => {
   try {
     const categories = await prisma.category.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { name: "asc" }],
     });
 
     return res.status(200).json({
@@ -311,6 +311,10 @@ export const deleteCategoryById = async (req: MulterRequest, res: Response) => {
         } catch (error) {
           console.warn("⚠️ Resim silinemedi:", error);
           // Resim silinemese bile kategoriyi sil
+          return res.status(500).json({
+            success: false,
+            error: "Kategori resmi silinirken hata oluştu",
+          });
         }
       }
     }

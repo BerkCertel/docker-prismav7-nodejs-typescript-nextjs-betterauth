@@ -1,12 +1,12 @@
-// Gerekli kütüphaneleri içeri aktarıyoruz
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import dotenv from "dotenv";
-import cors from "cors"; // Frontend ile backend arasındaki iletişimi sağlamak için
-import { Pool } from "pg"; // PostgreSQL'e bağlanmak için
+import { Pool } from "pg";
 import { PrismaClient } from "./generated/prisma/client";
-import categoryRouter from "./routes/categoryRoute";
-import healthcheckRouter from "./routes/healthcheckRoute";
 import { PrismaPg } from "@prisma/adapter-pg";
+import cors from "cors";
+import categoryRouter from "./routes/categoryRoute";
+import productRouter from "./routes/productRoute";
+import healthcheckRouter from "./routes/healthcheckRoute";
 
 // .env dosyasındaki değişkenleri projemize yüklüyoruz
 dotenv.config();
@@ -78,7 +78,7 @@ app.use(
         success: false,
         error: `Dosya boyutu çok büyük. Maksimum: ${
           process.env.MAX_FILE_SIZE
-            ? parseInt(process.env.MAX_FILE_SIZE) / 1024 / 1024
+            ? Number(process.env.MAX_FILE_SIZE) / 1024 / 1024
             : 5
         }MB`,
       });
@@ -101,15 +101,8 @@ app.use(
 );
 
 app.use("/api/category", categoryRouter);
+app.use("/api/product", productRouter);
 app.use("/api/healthcheck", healthcheckRouter);
-
-// 1. Basit bir sağlık kontrolü rotası
-// Bu, sunucunun ayakta olup olmadığını kontrol etmek için kullanılır.
-app.get("/api/ping", (req: Request, res: Response) => {
-  res.status(200).json({
-    message: "Pong! Sunucu çalışıyor. 🏓",
-  });
-});
 
 // Sunucuyu dinlemeye" başlıyoruz
 app.listen(PORT, () => {
