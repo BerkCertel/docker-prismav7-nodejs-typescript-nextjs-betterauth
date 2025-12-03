@@ -360,7 +360,6 @@ export const deleteCategoryById = async (req: MulterRequest, res: Response) => {
     });
 
     return res.status(200).json({
-      success: true,
       message: "Kategori başarıyla silindi",
     });
   } catch (error: any) {

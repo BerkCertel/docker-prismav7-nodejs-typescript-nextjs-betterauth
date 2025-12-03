@@ -37,16 +37,16 @@ app.use(express.json());
 // URL encoded verileri de kabul ediyoruz
 app.use(express.urlencoded({ extended: true }));
 // CORS'u etkinleştiriyoruz. Bu sayede frontend (localhost:3000) backend'e (localhost:5000) istek atabilir.
-// app.use(
-//   cors({
-//     origin: `${process.env.CLIENT_URL}`,
-//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: `${process.env.CLIENT_URL}`,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
-app.use(cors());
+// app.use(cors());
 
 // PostgreSQL veritabanı için bağlantı havuzu (pool) oluşturuyoruz.
 // Pool, tek tek bağlantı açıp kapatmak yerine birden çok bağlantıyı yönetir, bu daha verimlidir.
