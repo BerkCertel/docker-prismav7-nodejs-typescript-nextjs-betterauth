@@ -1,12 +1,14 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
 import { Pool } from "pg";
+import { toNodeHandler } from "better-auth/node";
 import { PrismaClient } from "./generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import cors from "cors";
 import categoryRouter from "./routes/categoryRoute";
 import productRouter from "./routes/productRoute";
 import healthcheckRouter from "./routes/healthcheckRoute";
+import { auth } from "./auth/auth";
 
 // .env dosyasındaki değişkenleri projemize yüklüyoruz
 dotenv.config();
@@ -31,6 +33,8 @@ app.set("trust proxy", 1);
 //! 2. Cloudflare Kullanırsan
 // Cloudflare her zaman proxy olarak çalışır:
 // typescriptapp.set("trust proxy", true); // Birden fazla proxy olabilir
+
+app.all("/api/auth/*splat", toNodeHandler(auth));
 
 // Gelen isteklerin JSON formatında olmasını sağlıyoruz
 app.use(express.json());
