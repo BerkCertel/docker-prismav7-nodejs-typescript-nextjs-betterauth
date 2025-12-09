@@ -8,10 +8,21 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: false,
   },
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 gün
     updateAge: 60 * 60 * 24, // 24 saat
   },
-  trustedOrigins: [process.env.CLIENT_URL || "http://localhost:3000"],
+  cookies: {
+    sessionToken: {
+      name: "better-auth.session",
+      options: {
+        sameSite: "none",
+        secure: false, // local için false, production'da true
+      },
+    },
+  },
+  secret: process.env.BETTER_AUTH_SECRET as string,
+  trustedOrigins: [process.env.CLIENT_URL as string],
 });

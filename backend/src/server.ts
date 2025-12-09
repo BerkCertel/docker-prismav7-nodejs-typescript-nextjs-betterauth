@@ -9,6 +9,7 @@ import categoryRouter from "./routes/categoryRoute";
 import productRouter from "./routes/productRoute";
 import healthcheckRouter from "./routes/healthcheckRoute";
 import { auth } from "./auth/auth";
+import { fromNodeHeaders } from "better-auth/node";
 
 // .env dosyasındaki değişkenleri projemize yüklüyoruz
 dotenv.config();
@@ -34,21 +35,39 @@ app.set("trust proxy", 1);
 // Cloudflare her zaman proxy olarak çalışır:
 // typescriptapp.set("trust proxy", true); // Birden fazla proxy olabilir
 
-app.all("/api/auth/*splat", toNodeHandler(auth));
-
-// Gelen isteklerin JSON formatında olmasını sağlıyoruz
-app.use(express.json());
-// URL encoded verileri de kabul ediyoruz
-app.use(express.urlencoded({ extended: true }));
 // CORS'u etkinleştiriyoruz. Bu sayede frontend (localhost:3000) backend'e (localhost:5000) istek atabilir.
 app.use(
   cors({
-    origin: `${process.env.CLIENT_URL}`,
+    origin: `${process.env.CLIENT_URL}` || "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
+
+app.all("/api/auth/*splat", toNodeHandler(auth));
+
+app.get("/api/me", async (req, res) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(req.headers),
+    });
+
+    if (!session) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    return res.json(session);
+  } catch (error) {
+    console.error("Session error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Gelen isteklerin JSON formatında olmasını sağlıyoruz
+app.use(express.json());
+// URL encoded verileri de kabul ediyoruz
+app.use(express.urlencoded({ extended: true }));
 
 // app.use(cors());
 

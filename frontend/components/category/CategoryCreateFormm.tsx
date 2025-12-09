@@ -47,9 +47,6 @@ const formSchema = z.object({
     ),
 });
 
-// ----------------------
-// COMPONENT
-// ----------------------
 export default function CategoryCreateForm() {
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -60,9 +57,6 @@ export default function CategoryCreateForm() {
     defaultValues: { name: "", image: null },
   });
 
-  // ----------------------
-  // FORM SUBMIT
-  // ----------------------
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       // FormData oluştur
@@ -106,9 +100,6 @@ export default function CategoryCreateForm() {
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
-            {/* ---------------------- */}
-            {/* Kategori İsmi */}
-            {/* ---------------------- */}
             <Controller
               name="name"
               control={form.control}
@@ -129,9 +120,6 @@ export default function CategoryCreateForm() {
               )}
             />
 
-            {/* ---------------------- */}
-            {/* Kategori Görseli */}
-            {/* ---------------------- */}
             <Controller
               name="image"
               control={form.control}
