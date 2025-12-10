@@ -23,7 +23,7 @@ export default function UserState() {
     const { data, error } = await authClient.signIn.email({
       email: "test2@gmail.com",
       password: "test123456",
-      callbackURL: "/dashboard",
+      callbackURL: "/client",
     });
 
     if (data) {

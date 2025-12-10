@@ -9,6 +9,7 @@ import {
 } from "../controllers/categoryController";
 import { upload } from "../middlewares/imageUpload.middleware";
 import { validateFile } from "../middlewares/fileValidation.middleware";
+import { isAdmin, protect } from "../middlewares/authMiddlwares";
 
 const categoryRouter = Router();
 
@@ -17,6 +18,8 @@ categoryRouter.post(
   "/create-category",
   upload.single("image"), // "image" field name
   validateFile, // Dosya validasyonu
+  protect,
+  isAdmin,
   createCategory
 );
 

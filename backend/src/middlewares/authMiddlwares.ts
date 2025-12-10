@@ -1,47 +1,208 @@
 // src/middlewares/protect.ts
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../auth/auth";
+import { prisma } from "../prisma";
+import { UserRole } from "../generated/prisma/client";
 
+// ✅ Temel authentication kontrolü
 export async function protect(req: any, res: any, next: any) {
   try {
     const session = await auth.api.getSession({
       headers: fromNodeHeaders(req.headers),
     });
 
-    if (!session) {
-      return res.status(401).json({ message: "Session not found." });
+    if (!session || !session.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Yetkisiz erişim. Lütfen giriş yapın.",
+      });
     }
 
-    // kullanıcı bilgisini req içine koy
-    req.user = session.user;
+    // ✅ KRITIK: Veritabanından kullanıcıyı kontrol et
+    const dbUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        banned: true,
+        banReason: true,
+        banExpires: true,
+      },
+    });
+
+    if (!dbUser) {
+      return res.status(401).json({
+        success: false,
+        message: "Kullanıcı bulunamadı.",
+      });
+    }
+
+    // ✅ Ban kontrolü
+    if (dbUser.banned) {
+      const isBanExpired =
+        dbUser.banExpires && new Date(dbUser.banExpires) < new Date();
+
+      if (!isBanExpired) {
+        return res.status(403).json({
+          success: false,
+          message: `Hesabınız engellenmiştir. Sebep: ${
+            dbUser.banReason || "Belirtilmemiş"
+          }`,
+          banExpires: dbUser.banExpires,
+        });
+      }
+    }
+
+    // ✅ Kullanıcıyı req'e ekle (VERİTABANINDAN gelen bilgi)
+    req.user = dbUser;
     req.session = session;
 
     next();
   } catch (err) {
-    return res.status(401).json({ message: "User not authenticated." });
+    console.error("Auth Error:", err);
+    return res.status(401).json({
+      success: false,
+      message: "Kimlik doğrulama hatası.",
+    });
   }
 }
 
+// ✅ Admin veya SuperAdmin kontrolü (veritabanından)
 export async function isAdmin(req: any, res: any, next: any) {
   if (!req.user) {
-    return res.status(401).json({ message: "User not authenticated." });
+    return res.status(401).json({
+      success: false,
+      message: "Kullanıcı bilgisi bulunamadı.",
+    });
   }
 
-  if (req.user.role !== "admin" && req.user.role !== "superadmin") {
-    return res.status(403).json({ message: "Forbidden: Not Admin" });
+  if (
+    req.user.role !== UserRole.admin &&
+    req.user.role !== UserRole.superadmin
+  ) {
+    return res.status(401).json({
+      success: false,
+      message: "Kullanıcı admin değil.",
+    });
+  }
+
+  // ✅ KRITIK: Veritabanından tekrar kontrol et
+  const dbUser = await prisma.user.findUnique({
+    where: { id: req.user.id },
+    select: { role: true, banned: true },
+  });
+
+  if (!dbUser) {
+    return res.status(401).json({
+      success: false,
+      message: "Kullanıcı bulunamadı.",
+    });
+  }
+
+  if (dbUser.banned) {
+    return res.status(403).json({
+      success: false,
+      message: "Hesabınız engellenmiştir.",
+    });
+  }
+
+  // ✅ Enum kontrolü
+  if (dbUser.role !== UserRole.admin && dbUser.role !== UserRole.superadmin) {
+    return res.status(403).json({
+      success: false,
+      message: "Bu işlem için admin yetkisi gereklidir.",
+      requiredRole: "admin veya superadmin",
+      currentRole: dbUser.role,
+    });
   }
 
   next();
 }
 
+// ✅ Sadece SuperAdmin kontrolü (veritabanından)
 export async function isSuperAdmin(req: any, res: any, next: any) {
   if (!req.user) {
-    return res.status(401).json({ message: "User not authenticated." });
+    return res.status(401).json({
+      success: false,
+      message: "Kullanıcı bilgisi bulunamadı.",
+    });
   }
 
-  if (req.user.role !== "superadmin") {
-    return res.status(403).json({ message: "Forbidden: Not SuperAdmin" });
+  // ✅ KRITIK: Veritabanından tekrar kontrol et
+  const dbUser = await prisma.user.findUnique({
+    where: { id: req.user.id },
+    select: { role: true, banned: true },
+  });
+
+  if (!dbUser) {
+    return res.status(401).json({
+      success: false,
+      message: "Kullanıcı bulunamadı.",
+    });
+  }
+
+  if (dbUser.banned) {
+    return res.status(403).json({
+      success: false,
+      message: "Hesabınız engellenmiştir.",
+    });
+  }
+
+  // ✅ Enum kontrolü
+  if (dbUser.role !== UserRole.superadmin) {
+    return res.status(403).json({
+      success: false,
+      message: "Bu işlem için süper admin yetkisi gereklidir.",
+      requiredRole: "superadmin",
+      currentRole: dbUser.role,
+    });
   }
 
   next();
+}
+
+// ✅ Belirli bir yetki kontrolü
+export async function hasPermission(permission: {
+  resource: string;
+  action: string;
+}) {
+  return async (req: any, res: any, next: any) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Kullanıcı bilgisi bulunamadı.",
+      });
+    }
+
+    try {
+      // ✅ Better Auth'un permission kontrolü kullan
+      const result = await auth.api.userHasPermission({
+        body: {
+          userId: req.user.id,
+          permissions: {
+            [permission.resource]: [permission.action],
+          },
+        },
+      });
+
+      if (!result || !(result as any).hasPermission) {
+        return res.status(403).json({
+          success: false,
+          message: "Bu işlem için yetkiniz bulunmamaktadır.",
+          required: permission,
+          currentRole: req.user.role,
+        });
+      }
+
+      next();
+    } catch (error) {
+      console.error("Permission check error:", error);
+      return res.status(403).json({
+        success: false,
+        message: "Yetki kontrolü sırasında hata oluştu.",
+      });
+    }
+  };
 }

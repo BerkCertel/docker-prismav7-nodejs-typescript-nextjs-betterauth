@@ -10,7 +10,7 @@ export const categoryApi = createApi({
   reducerPath: "category",
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/category`,
-    // credentials: "include",
+    credentials: "include",
   }),
   tagTypes: ["Category"],
   endpoints: (builder) => ({

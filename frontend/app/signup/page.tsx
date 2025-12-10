@@ -26,7 +26,7 @@ export default function SignUpPage() {
     });
 
     if (data?.user) {
-      router.push("/dashboard");
+      console.log("successfull", data.user);
     } else if (error) {
       setError(error.message || "Kayıt başarısız!");
     }

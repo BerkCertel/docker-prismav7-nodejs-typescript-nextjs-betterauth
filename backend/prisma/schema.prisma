@@ -9,7 +9,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
 model User {
   id            String    @id
   name          String
@@ -18,6 +17,10 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  role          UserRole  @default(user) 
+  banned        Boolean?  @default(false)
+  banReason     String?
+  banExpires    DateTime?
   sessions      Session[]
   accounts      Account[]
 
@@ -25,16 +28,24 @@ model User {
   @@map("user")
 }
 
+//  Roller için Enum tanımı
+enum UserRole {
+  user
+  admin
+  superadmin
+}
+
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String   @id
+  expiresAt      DateTime
+  token          String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy String?
 
   @@unique([token])
   @@index([userId])
@@ -69,10 +80,11 @@ model Verification {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  value String
+
   @@index([identifier])
   @@map("verification")
 }
-
 
 
 model Category {
@@ -102,6 +114,5 @@ model Product {
 
   @@map("products")
 }
-
 
 
