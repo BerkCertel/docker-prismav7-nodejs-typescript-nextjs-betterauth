@@ -35,7 +35,16 @@ export const userRole = ac.newRole({
 export const adminRole = ac.newRole({
   product: ["view", "create", "update", "delete", "updateStatus"], // ✅ Ürünler üzerinde tam yetki
   category: ["view", "create", "update", "delete"], // ✅ Kategoriler üzerinde tam yetki
-  user: ["list", "get", "ban", "unban", "set-role", "update"], // ✅ unban artık kullanılabilir
+  user: [
+    "create",
+    "list",
+    "get",
+    "ban",
+    "unban",
+    "set-role",
+    "update",
+    "delete",
+  ], // ✅ unban artık kullanılabilir
   session: ["list", "revoke"], // ✅ Session yönetimi
 });
 
@@ -49,6 +58,7 @@ export const superAdminRole = ac.newRole({
     ...adminAc.statements.user,
     "unban", // ✅ SuperAdmin için de unban ekle
   ],
+  session: ["list", "revoke", "delete"], // ✅ Session yönetimi
 });
 
 export { statement };

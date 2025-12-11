@@ -4,12 +4,18 @@ import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { categoryApi } from "@/services/categoryService";
+import { userApi } from "./../services/authService";
 // import categoryReducer from "./categorySlice";
 
 export const store = configureStore({
-  reducer: { [categoryApi.reducerPath]: categoryApi.reducer },
+  reducer: {
+    [categoryApi.reducerPath]: categoryApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
+  },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(categoryApi.middleware),
+    getDefaultMiddleware()
+      .concat(categoryApi.middleware)
+      .concat(userApi.middleware),
 });
 
 setupListeners(store.dispatch);

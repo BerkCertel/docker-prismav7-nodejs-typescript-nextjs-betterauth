@@ -59,6 +59,9 @@ export async function protect(req: any, res: any, next: any) {
     req.user = dbUser;
     req.session = session;
 
+    // console.log(dbUser);
+    // console.log(session);
+
     next();
   } catch (err) {
     console.error("Auth Error:", err);
@@ -160,11 +163,15 @@ export async function isSuperAdmin(req: any, res: any, next: any) {
     });
   }
 
+  if (dbUser.role == UserRole.superadmin) {
+    console.log("Kullanıcı rolu işlemi yapmya uygun.");
+  }
+
   next();
 }
 
 // ✅ Belirli bir yetki kontrolü
-export async function hasPermission(permission: {
+export function hasPermission(permission: {
   resource: string;
   action: string;
 }) {
@@ -177,21 +184,24 @@ export async function hasPermission(permission: {
     }
 
     try {
-      // ✅ Better Auth'un permission kontrolü kullan
+      const resource = permission.resource.toLowerCase();
+      const action = permission.action.toLowerCase();
+
       const result = await auth.api.userHasPermission({
         body: {
           userId: req.user.id,
           permissions: {
-            [permission.resource]: [permission.action],
+            [resource]: [action],
           },
         },
       });
 
-      if (!result || !(result as any).hasPermission) {
+      // ❗ BetterAuth admin plugin success = true döner
+      if (!result || result.success !== true) {
         return res.status(403).json({
           success: false,
           message: "Bu işlem için yetkiniz bulunmamaktadır.",
-          required: permission,
+          required: { resource, action },
           currentRole: req.user.role,
         });
       }

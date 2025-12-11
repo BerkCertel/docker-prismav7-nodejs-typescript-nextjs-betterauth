@@ -10,6 +10,11 @@ import productRouter from "./routes/productRoute";
 import healthcheckRouter from "./routes/healthcheckRoute";
 import { auth } from "./auth/auth";
 import { fromNodeHeaders } from "better-auth/node";
+import morgan from "morgan";
+import { sanitizerMiddleware } from "./middlewares/sanitizer";
+import helmet from "helmet";
+import hpp from "hpp";
+import { apiLimiter, apiSlowdown } from "./middlewares/ratelimiter";
 
 // .env dosyasındaki değişkenleri projemize yüklüyoruz
 dotenv.config();
@@ -31,11 +36,11 @@ const app: Express = express();
 //! Proxy arkasında çalışıyorsak gerçek IP adresini alabilmek için
 app.set("trust proxy", 1);
 
+app.use(morgan("dev"));
 //! 2. Cloudflare Kullanırsan
 // Cloudflare her zaman proxy olarak çalışır:
 // typescriptapp.set("trust proxy", true); // Birden fazla proxy olabilir
 
-// CORS'u etkinleştiriyoruz. Bu sayede frontend (localhost:3000) backend'e (localhost:5000) istek atabilir.
 app.use(
   cors({
     origin: `${process.env.CLIENT_URL}` || "http://localhost:3000",
@@ -44,30 +49,34 @@ app.use(
     credentials: true,
   })
 );
-
+app.use(helmet());
+app.use(hpp());
+app.use(sanitizerMiddleware);
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
-app.get("/api/me", async (req, res) => {
-  try {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(req.headers),
-    });
+app.use(express.json({ limit: "100kb" }));
+app.use(express.urlencoded({ extended: true, limit: "100kb" }));
+app.use(apiLimiter);
+app.use(apiSlowdown);
+// Örnek: auth.api nesnesini konsola yazdır
+// console.log(auth.api);
 
-    if (!session) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
+// app.get("/api/me", async (req, res) => {
+//   try {
+//     const session = await auth.api.getSession({
+//       headers: fromNodeHeaders(req.headers),
+//     });
 
-    return res.json(session);
-  } catch (error) {
-    console.error("Session error:", error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-});
+//     if (!session) {
+//       return res.status(401).json({ error: "Unauthorized" });
+//     }
 
-// Gelen isteklerin JSON formatında olmasını sağlıyoruz
-app.use(express.json());
-// URL encoded verileri de kabul ediyoruz
-app.use(express.urlencoded({ extended: true }));
+//     return res.json(session);
+//   } catch (error) {
+//     console.error("Session error:", error);
+//     return res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 
 // app.use(cors());
 

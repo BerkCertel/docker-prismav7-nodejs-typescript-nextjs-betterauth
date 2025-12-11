@@ -13,3 +13,5 @@ export const { signIn, signUp, signOut, useSession } = authClient;
 
 // ✅ Tüm hata kodlarını içeren tip
 export type AllErrorCodes = typeof authClient.$ERROR_CODES;
+
+export type AllEndPoints = typeof authClient.admin.listUsers;

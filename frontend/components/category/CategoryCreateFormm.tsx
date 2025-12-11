@@ -83,7 +83,7 @@ export default function CategoryCreateForm() {
         const e = err as { data?: { error?: string } };
         if (e.data?.error) message = e.data.error;
       }
-
+      console.log(err);
       toast.error(message);
     }
   };

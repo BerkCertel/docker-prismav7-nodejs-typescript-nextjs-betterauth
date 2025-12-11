@@ -6,4 +6,8 @@ export const API_PATHS = {
     UPDATE_CATEGORY: (id: number) => `/category/${id}`,
     DELETE_CATEGORY: (id: number) => `/category/${id}`,
   },
+
+  USER: {
+    GET_USERS: "all-users",
+  },
 };

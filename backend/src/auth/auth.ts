@@ -22,15 +22,17 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7, // 7 gün
     updateAge: 60 * 60 * 24, // 24 saat
   },
-  // cookies: {
-  //   sessionToken: {
-  //     name: "better-auth.session",
-  //     options: {
-  //       sameSite: "none",
-  //       secure: false, // local için false, production'da true
-  //     },
-  //   },
-  // },
+  cookies: {
+    sessionToken: {
+      name: "better-auth.session",
+      options: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+        path: "/",
+      },
+    },
+  },
 
   disabledPaths: [
     "/sign-up/email", // ❌ Email ile kayıt kapalı
@@ -41,7 +43,7 @@ export const auth = betterAuth({
   plugins: [
     admin({
       defaultRole: "user",
-      ac,
+      ac: ac,
       roles: {
         user: userRole,
         admin: adminRole,

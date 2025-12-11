@@ -25,6 +25,7 @@ export default function SignInPage() {
 
     if (data?.user) {
       console.log(" login successfull", data.user);
+      router.push("/admin/users");
     } else if (error) {
       setError(error.message || "Giriş başarısız!");
     }
