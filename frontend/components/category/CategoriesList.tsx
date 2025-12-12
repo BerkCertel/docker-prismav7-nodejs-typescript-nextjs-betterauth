@@ -1,6 +1,7 @@
 "use client";
 
 import { useGetCategoriesQuery } from "@/services/categoryService";
+import Image from "next/image";
 
 function CategoryList() {
   const {
@@ -9,6 +10,8 @@ function CategoryList() {
     isError: isCategoriesError,
     error: categoriesError,
   } = useGetCategoriesQuery();
+
+  console.log(categories);
 
   return (
     <div>
@@ -25,9 +28,17 @@ function CategoryList() {
 
           <ul className="list-disc pl-6">
             {categories?.map((category) => (
-              <li key={category.id} className="mb-2">
-                <span className="font-medium">{category.name}</span>
-              </li>
+              <div key={category.id}>
+                <li className="mb-2">
+                  <span className="font-medium">{category.name}</span>
+                </li>
+                <Image
+                  src={category.imageUrl}
+                  alt={category.name}
+                  width={50}
+                  height={50}
+                />
+              </div>
             ))}
           </ul>
         </div>

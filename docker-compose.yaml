@@ -73,6 +73,42 @@ services:
       "
     networks:
       - app-network
+      # 4. 🌍 LibreTranslate Çeviri Servisi
+  # libretranslate:
+  #   image: libretranslate/libretranslate:latest
+  #   container_name: translate_service
+  #   restart: unless-stopped
+  #   environment:
+  #     # Desteklenecek diller (virgülle ayır) - az dil = az RAM
+  #     LT_LOAD_ONLY: ${TRANSLATE_LANGUAGES}
+  #     # API Key zorunluluğu (production için önerilir)
+  #     LT_API_KEYS: ${TRANSLATE_API_KEY}
+  #     # Öneriler özelliğini kapat (RAM tasarrufu)
+  #     LT_SUGGESTIONS: "false"
+  #     # Karakter limiti
+  #     LT_CHAR_LIMIT: ${TRANSLATE_CHAR_LIMIT}
+  #     # Frontend'i devre dışı bırak (sadece API)
+  #     LT_FRONTEND_DISABLED: "false"
+  #   ports:
+  #     - "5050:5000"
+  #   volumes:
+  #     # Dil modellerini cache'le (tekrar indirmeyi önler)
+  #     - libretranslate-data:/home/libretranslate/.local
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:5000/languages"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 120s # İlk başlatmada dil modelleri indiriliyor
+  #   networks:
+  #     - app-network
+  #   # RAM sınırlaması (opsiyonel)
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 4G
+  #       reservations:
+  #         memory: 2G
 
 # Network tanımı (servislerin birbirleriyle konuşması için)
 networks:
@@ -84,4 +120,6 @@ volumes:
   postgres-data:
     driver: local
   minio-data:
+    driver: local
+  libretranslate-data:
     driver: local

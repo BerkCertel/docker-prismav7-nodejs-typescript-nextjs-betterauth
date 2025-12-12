@@ -1,0 +1,140 @@
+{
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "actions": "Actions",
+    "status": "Statut",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "noData": "Aucune donnée trouvée",
+    "success": "Succès",
+    "close": "Fermer"
+  },
+  "nav": {
+    "qrCodes": "Codes QR",
+    "locations": "Emplacements",
+    "categories": "Catégories",
+    "subcategories": "Sous-catégories",
+    "users": "Utilisateurs",
+    "orders": "Commandes",
+    "logout": "Déconnexion"
+  },
+  "auth": {
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "forgotPassword": "Mot de passe oublié",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "welcomeBack": "Bienvenue",
+    "loginSubtitle": "Connectez-vous à votre système de commande d'hôtel",
+    "createAccount": "Créer un compte",
+    "registerSubtitle": "Créer un nouveau compte",
+    "forgotPasswordSubtitle": "Entrez votre e-mail pour réinitialiser votre mot de passe",
+    "resetPasswordSubtitle": "Définissez votre nouveau mot de passe",
+    "sendResetLink": "Envoyer le lien de réinitialisation",
+    "backToLogin": "Retour à la connexion",
+    "alreadyHaveAccount": "Vous avez déjà un compte?",
+    "dontHaveAccount": "Vous n'avez pas de compte?"
+  },
+  "qr": {
+    "title": "Gestion des codes QR",
+    "subtitle": "Créer et gérer les codes QR",
+    "create": "Créer un code QR",
+    "label": "Étiquette QR",
+    "location": "Emplacement",
+    "selectLocation": "Sélectionner l'emplacement",
+    "rooms": "Chambres",
+    "download": "Télécharger",
+    "noRooms": "Aucune chambre trouvée"
+  },
+  "locations": {
+    "title": "Emplacements",
+    "subtitle": "Afficher les emplacements créés",
+    "create": "Créer un emplacement",
+    "name": "Emplacement",
+    "edit": "Modifier",
+    "delete": "Supprimer"
+  },
+  "categories": {
+    "title": "Catégories",
+    "subtitle": "Afficher et modifier vos catégories existantes",
+    "create": "Créer une nouvelle catégorie",
+    "addNew": "Ajoutez une nouvelle catégorie à votre menu",
+    "name": "Nom de la catégorie",
+    "image": "Image de catégorie",
+    "selectImage": "Aucun fichier sélectionné",
+    "translations": "Traductions"
+  },
+  "subcategories": {
+    "title": "Gestion des sous-catégories",
+    "subtitle": "Gérer les sous-catégories liées aux catégories",
+    "create": "Ajouter une nouvelle sous-catégorie",
+    "addNew": "Créer une nouvelle sous-catégorie",
+    "name": "Nom de la sous-catégorie",
+    "parentCategory": "Catégorie parente",
+    "selectCategory": "Sélectionner une catégorie",
+    "price": "Prix",
+    "priceOptional": "Tarification (Optionnel)",
+    "image": "Image",
+    "description": "Description",
+    "descriptionPlaceholder": "Une brève description de la sous-catégorie...",
+    "timeRange": "Plage horaire payante",
+    "timeRangeOptional": "Plage horaire payante (Optionnel)",
+    "translations": "Traductions de noms",
+    "charCount": "caractères"
+  },
+  "users": {
+    "title": "Gérer les utilisateurs",
+    "subtitle": "Afficher et gérer les utilisateurs créés",
+    "create": "Créer un utilisateur",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "role": "Rôle",
+    "selectRole": "Sélectionner un rôle",
+    "locations": "Emplacements",
+    "selectLocations": "Sélectionner des emplacements",
+    "allLocations": "Tous les emplacements"
+  },
+  "orders": {
+    "title": "Commandes",
+    "subtitle": "Suivi des commandes",
+    "status": {
+      "all": "Tous",
+      "beach": "Plage",
+      "poolBar": "Bar de la piscine",
+      "lobbyBar": "Bar du hall",
+      "rooms": "Chambres"
+    },
+    "orderStatus": {
+      "pending": "En attente",
+      "completed": "Terminé",
+      "cancelled": "Annulé"
+    },
+    "room": "Chambre",
+    "qr": "QR",
+    "total": "Total",
+    "item": "Article",
+    "quantity": "Quantité",
+    "unitPrice": "Prix unitaire",
+    "orderNote": "Note de commande",
+    "actions": {
+      "waiting": "En attente",
+      "complete": "Terminer",
+      "cancel": "Annuler",
+      "delete": "Supprimer la commande"
+    },
+    "pagination": {
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+    "noOrders": "Aucune commande",
+    "noOrdersDescription": "Il n'y a actuellement aucune commande pour cet emplacement. Veuillez revenir plus tard."
+  }
+}

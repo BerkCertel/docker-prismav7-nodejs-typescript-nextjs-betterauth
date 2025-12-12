@@ -1,0 +1,140 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "actions": "Actions",
+    "status": "Status",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "noData": "No data found",
+    "success": "Success",
+    "close": "Close"
+  },
+  "nav": {
+    "qrCodes": "QR Codes",
+    "locations": "Locations",
+    "categories": "Categories",
+    "subcategories": "Subcategories",
+    "users": "Users",
+    "orders": "Orders",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "forgotPassword": "Forgot Password",
+    "resetPassword": "Reset Password",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "welcomeBack": "Welcome Back",
+    "loginSubtitle": "Login to your hotel order system",
+    "createAccount": "Create Account",
+    "registerSubtitle": "Create a new account",
+    "forgotPasswordSubtitle": "Enter your email to reset your password",
+    "resetPasswordSubtitle": "Set your new password",
+    "sendResetLink": "Send Reset Link",
+    "backToLogin": "Back to Login",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?"
+  },
+  "qr": {
+    "title": "QR Code Management",
+    "subtitle": "Create and manage QR codes",
+    "create": "Create QR Code",
+    "label": "QR Label",
+    "location": "Location",
+    "selectLocation": "Select location",
+    "rooms": "Rooms",
+    "download": "Download",
+    "noRooms": "No rooms found"
+  },
+  "locations": {
+    "title": "Locations",
+    "subtitle": "View created locations",
+    "create": "Create Location",
+    "name": "Location",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "categories": {
+    "title": "Categories",
+    "subtitle": "View and edit your existing categories",
+    "create": "Create New Category",
+    "addNew": "Add a new category to your menu",
+    "name": "Category Name",
+    "image": "Category Image",
+    "selectImage": "No file selected",
+    "translations": "Translations"
+  },
+  "subcategories": {
+    "title": "Subcategory Management",
+    "subtitle": "Manage subcategories linked to categories",
+    "create": "Add New Subcategory",
+    "addNew": "Create New Subcategory",
+    "name": "Subcategory Name",
+    "parentCategory": "Parent Category",
+    "selectCategory": "Select category",
+    "price": "Price",
+    "priceOptional": "Pricing (Optional)",
+    "image": "Image",
+    "description": "Description",
+    "descriptionPlaceholder": "A brief description about the subcategory...",
+    "timeRange": "Paid Time Range",
+    "timeRangeOptional": "Paid Time Range (Optional)",
+    "translations": "Name Translations",
+    "charCount": "characters"
+  },
+  "users": {
+    "title": "Manage Users",
+    "subtitle": "View and manage created users",
+    "create": "Create User",
+    "email": "Email",
+    "password": "Password",
+    "role": "Role",
+    "selectRole": "Select role",
+    "locations": "Locations",
+    "selectLocations": "Select locations",
+    "allLocations": "All locations"
+  },
+  "orders": {
+    "title": "Orders",
+    "subtitle": "Order tracking",
+    "status": {
+      "all": "All",
+      "beach": "Beach",
+      "poolBar": "Pool Bar",
+      "lobbyBar": "Lobby Bar",
+      "rooms": "Rooms"
+    },
+    "orderStatus": {
+      "pending": "Pending",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "room": "Room",
+    "qr": "QR",
+    "total": "Total",
+    "item": "Item",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "orderNote": "Order Note",
+    "actions": {
+      "waiting": "Waiting",
+      "complete": "Complete",
+      "cancel": "Cancel",
+      "delete": "Delete Order"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "noOrders": "No Orders",
+    "noOrdersDescription": "There are currently no orders for this location. Please check back later."
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "common": {
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "create": "Oluştur",
+    "search": "Ara",
+    "filter": "Filtrele",
+    "actions": "İşlemler",
+    "status": "Durum",
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "noData": "Veri bulunamadı",
+    "success": "Başarılı",
+    "close": "Kapat"
+  },
+  "nav": {
+    "qrCodes": "QR Kodlar",
+    "locations": "Lokasyonlar",
+    "categories": "Kategoriler",
+    "subcategories": "Alt Kategoriler",
+    "users": "Kullanıcılar",
+    "orders": "Siparişler",
+    "logout": "Çıkış Yap"
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "forgotPassword": "Şifremi Unuttum",
+    "resetPassword": "Şifre Sıfırla",
+    "email": "E-posta",
+    "password": "Şifre",
+    "confirmPassword": "Şifre Tekrar",
+    "welcomeBack": "Tekrar Hoş Geldiniz",
+    "loginSubtitle": "Otel sipariş sisteminize giriş yapın",
+    "createAccount": "Hesap Oluştur",
+    "registerSubtitle": "Yeni bir hesap oluşturun",
+    "forgotPasswordSubtitle": "Şifrenizi sıfırlamak için e-posta adresinizi girin",
+    "resetPasswordSubtitle": "Yeni şifrenizi belirleyin",
+    "sendResetLink": "Sıfırlama Bağlantısı Gönder",
+    "backToLogin": "Girişe Dön",
+    "alreadyHaveAccount": "Zaten hesabınız var mı?",
+    "dontHaveAccount": "Hesabınız yok mu?"
+  },
+  "qr": {
+    "title": "QR Kod Yönetimi",
+    "subtitle": "QR kodları oluşturun ve yönetin",
+    "create": "QR Kod Oluştur",
+    "label": "QR Label",
+    "location": "Lokasyon",
+    "selectLocation": "Lokasyon seç",
+    "rooms": "Odalar",
+    "download": "İndir",
+    "noRooms": "Oda bulunamadı"
+  },
+  "locations": {
+    "title": "Lokasyonlar",
+    "subtitle": "Oluşturulan lokasyonları görüntüleyin",
+    "create": "Lokasyon Oluştur",
+    "name": "Lokasyon",
+    "edit": "Düzenle",
+    "delete": "Sil"
+  },
+  "categories": {
+    "title": "Kategoriler",
+    "subtitle": "Mevcut kategorilerinizi görüntüleyin ve düzenleyin",
+    "create": "Yeni Kategori Oluştur",
+    "addNew": "Menünüze yeni bir kategori ekleyin",
+    "name": "Kategori Adı",
+    "image": "Kategori Görseli",
+    "selectImage": "Dosya seçilmedi",
+    "translations": "Çeviriler"
+  },
+  "subcategories": {
+    "title": "Alt Kategori Yönetimi",
+    "subtitle": "Kategorilere bağlı alt kategorileri yönetin",
+    "create": "Yeni Alt Kategori Ekle",
+    "addNew": "Yeni Alt Kategori Oluştur",
+    "name": "Alt Kategori Adı",
+    "parentCategory": "Üst Kategori",
+    "selectCategory": "Kategori seçiniz",
+    "price": "Fiyat",
+    "priceOptional": "Fiyatlandırma (Opsiyonel)",
+    "image": "Görsel",
+    "description": "Açıklama",
+    "descriptionPlaceholder": "Alt kategori hakkında kısa bir açıklama...",
+    "timeRange": "Ücretli Saat Aralığı",
+    "timeRangeOptional": "Ücretli Saat Aralığı (Opsiyonel)",
+    "translations": "Ad Çevirileri",
+    "charCount": "karakter"
+  },
+  "users": {
+    "title": "Kullanıcıları Yönet",
+    "subtitle": "Oluşturulan kullanıcıları görüntüleyin ve yönetin",
+    "create": "Kullanıcı Oluştur",
+    "email": "E-posta",
+    "password": "Şifre",
+    "role": "Role",
+    "selectRole": "Role seçiniz",
+    "locations": "Lokasyonlar",
+    "selectLocations": "Lokasyon seçiniz",
+    "allLocations": "Tüm lokasyonlar"
+  },
+  "orders": {
+    "title": "Siparişler",
+    "subtitle": "Sipariş takibi",
+    "status": {
+      "all": "Tümü",
+      "beach": "Sahil",
+      "poolBar": "Pool Bar",
+      "lobbyBar": "Lobby Bar",
+      "rooms": "Odalar"
+    },
+    "orderStatus": {
+      "pending": "Beklemede",
+      "completed": "Tamamlandı",
+      "cancelled": "İptal Edildi"
+    },
+    "room": "Room",
+    "qr": "QR",
+    "total": "Total",
+    "item": "Item",
+    "quantity": "Quantity",
+    "unitPrice": "Unit Price",
+    "orderNote": "Sipariş Notu",
+    "actions": {
+      "waiting": "Beklemede",
+      "complete": "Tamamlandı",
+      "cancel": "İptal Edildi",
+      "delete": "Siparişi Sil"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "noOrders": "No Orders",
+    "noOrdersDescription": "There are currently no orders for this location. Please check back later."
+  }
+}

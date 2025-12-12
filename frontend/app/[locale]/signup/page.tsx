@@ -29,6 +29,7 @@ export default function SignUpPage() {
       console.log("successfull", data.user);
     } else if (error) {
       setError(error.message || "Kayıt başarısız!");
+      console.log(error);
     }
     setLoading(false);
   };

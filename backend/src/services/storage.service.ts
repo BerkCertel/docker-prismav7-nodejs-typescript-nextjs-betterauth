@@ -40,7 +40,8 @@ export class StorageService {
 
       await s3Client.send(command);
 
-      const url = `${process.env.MINIO_ENDPOINT}/${bucketName}/${fileName}`;
+      const publicBaseUrl = process.env.MINIO_PUBLIC_URL;
+      const url = `${publicBaseUrl}/${bucketName}/${fileName}`;
 
       return {
         url,

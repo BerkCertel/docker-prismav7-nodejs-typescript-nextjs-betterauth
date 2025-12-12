@@ -7,10 +7,10 @@ export const s3Client = new S3Client({
   endpoint: process.env.MINIO_ENDPOINT || "http://localhost:9000",
   region: "us-east-1", // MinIO için önemli değil ama gerekli
   credentials: {
-    accessKeyId: process.env.MINIO_ROOT_USER || "minioadmin",
-    secretAccessKey: process.env.MINIO_ROOT_PASSWORD || "minioadmin123",
+    accessKeyId: process.env.MINIO_ROOT_USER as string,
+    secretAccessKey: process.env.MINIO_ROOT_PASSWORD as string,
   },
-  forcePathStyle: true, // MinIO için kritik!
+  forcePathStyle: true, // MinIO için gerekli
 });
 
 export const BUCKETS = {

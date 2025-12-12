@@ -1,0 +1,140 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "actions": "Aktionen",
+    "status": "Status",
+    "loading": "Wird geladen...",
+    "error": "Ein Fehler ist aufgetreten",
+    "noData": "Keine Daten gefunden",
+    "success": "Erfolgreich",
+    "close": "Schließen"
+  },
+  "nav": {
+    "qrCodes": "QR-Codes",
+    "locations": "Standorte",
+    "categories": "Kategorien",
+    "subcategories": "Unterkategorien",
+    "users": "Benutzer",
+    "orders": "Bestellungen",
+    "logout": "Abmelden"
+  },
+  "auth": {
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "forgotPassword": "Passwort vergessen",
+    "resetPassword": "Passwort zurücksetzen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "welcomeBack": "Willkommen zurück",
+    "loginSubtitle": "Melden Sie sich bei Ihrem Hotelbestellsystem an",
+    "createAccount": "Konto erstellen",
+    "registerSubtitle": "Erstellen Sie ein neues Konto",
+    "forgotPasswordSubtitle": "Geben Sie Ihre E-Mail-Adresse ein, um Ihr Passwort zurückzusetzen",
+    "resetPasswordSubtitle": "Legen Sie Ihr neues Passwort fest",
+    "sendResetLink": "Reset-Link senden",
+    "backToLogin": "Zurück zur Anmeldung",
+    "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+    "dontHaveAccount": "Haben Sie noch kein Konto?"
+  },
+  "qr": {
+    "title": "QR-Code-Verwaltung",
+    "subtitle": "QR-Codes erstellen und verwalten",
+    "create": "QR-Code erstellen",
+    "label": "QR-Label",
+    "location": "Standort",
+    "selectLocation": "Standort auswählen",
+    "rooms": "Zimmer",
+    "download": "Herunterladen",
+    "noRooms": "Keine Zimmer gefunden"
+  },
+  "locations": {
+    "title": "Standorte",
+    "subtitle": "Erstellte Standorte anzeigen",
+    "create": "Standort erstellen",
+    "name": "Standort",
+    "edit": "Bearbeiten",
+    "delete": "Löschen"
+  },
+  "categories": {
+    "title": "Kategorien",
+    "subtitle": "Ihre vorhandenen Kategorien anzeigen und bearbeiten",
+    "create": "Neue Kategorie erstellen",
+    "addNew": "Fügen Sie Ihrem Menü eine neue Kategorie hinzu",
+    "name": "Kategoriename",
+    "image": "Kategoriebild",
+    "selectImage": "Keine Datei ausgewählt",
+    "translations": "Übersetzungen"
+  },
+  "subcategories": {
+    "title": "Unterkategorie-Verwaltung",
+    "subtitle": "Unterkategorien verwalten, die mit Kategorien verknüpft sind",
+    "create": "Neue Unterkategorie hinzufügen",
+    "addNew": "Neue Unterkategorie erstellen",
+    "name": "Unterkategoriename",
+    "parentCategory": "Übergeordnete Kategorie",
+    "selectCategory": "Kategorie auswählen",
+    "price": "Preis",
+    "priceOptional": "Preisgestaltung (Optional)",
+    "image": "Bild",
+    "description": "Beschreibung",
+    "descriptionPlaceholder": "Eine kurze Beschreibung der Unterkategorie...",
+    "timeRange": "Kostenpflichtiger Zeitraum",
+    "timeRangeOptional": "Kostenpflichtiger Zeitraum (Optional)",
+    "translations": "Namensübersetzungen",
+    "charCount": "Zeichen"
+  },
+  "users": {
+    "title": "Benutzer verwalten",
+    "subtitle": "Erstellte Benutzer anzeigen und verwalten",
+    "create": "Benutzer erstellen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "role": "Rolle",
+    "selectRole": "Rolle auswählen",
+    "locations": "Standorte",
+    "selectLocations": "Standorte auswählen",
+    "allLocations": "Alle Standorte"
+  },
+  "orders": {
+    "title": "Bestellungen",
+    "subtitle": "Bestellverfolgung",
+    "status": {
+      "all": "Alle",
+      "beach": "Strand",
+      "poolBar": "Pool Bar",
+      "lobbyBar": "Lobby Bar",
+      "rooms": "Zimmer"
+    },
+    "orderStatus": {
+      "pending": "Ausstehend",
+      "completed": "Abgeschlossen",
+      "cancelled": "Storniert"
+    },
+    "room": "Zimmer",
+    "qr": "QR",
+    "total": "Gesamt",
+    "item": "Artikel",
+    "quantity": "Menge",
+    "unitPrice": "Stückpreis",
+    "orderNote": "Bestellnotiz",
+    "actions": {
+      "waiting": "Wartend",
+      "complete": "Abschließen",
+      "cancel": "Stornieren",
+      "delete": "Bestellung löschen"
+    },
+    "pagination": {
+      "previous": "Zurück",
+      "next": "Weiter"
+    },
+    "noOrders": "Keine Bestellungen",
+    "noOrdersDescription": "Derzeit gibt es keine Bestellungen für diesen Standort. Bitte schauen Sie später noch einmal vorbei."
+  }
+}
